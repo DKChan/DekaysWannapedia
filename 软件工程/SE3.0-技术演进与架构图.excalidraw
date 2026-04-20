@@ -1,0 +1,803 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    {
+      "type": "text",
+      "id": "title",
+      "x": 350,
+      "y": 20,
+      "width": 500,
+      "height": 40,
+      "text": "Software Engineering 3.0: From SE 2.0 to Agentic SE",
+      "fontSize": 26,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "SE 3.0 Evolution",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "x": 400,
+      "y": 55,
+      "width": 400,
+      "height": 20,
+      "text": "Based on Hassan et al. Research Papers (2024-2025)",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#666666",
+      "originalText": "subtitle",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "se2_box",
+      "x": 50,
+      "y": 100,
+      "width": 300,
+      "height": 180,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#e9ecef",
+      "fillStyle": "solid",
+      "strokeColor": "#495057",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "se2_title",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "se2_title",
+      "x": 60,
+      "y": 115,
+      "width": 280,
+      "height": 30,
+      "text": "SE 2.0: AI-Assisted",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "se2_box",
+      "originalText": "SE 2.0",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "se2_desc",
+      "x": 70,
+      "y": 155,
+      "width": 260,
+      "height": 110,
+      "text": "• AI Coding Assistants\n• Task-driven workflows\n• Human-centered loop\n• High cognitive overload\n• GitHub Copilot, Claude Code",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#495057",
+      "originalText": "SE 2.0 desc",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "se3_box",
+      "x": 750,
+      "y": 100,
+      "width": 320,
+      "height": 180,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d0bfff",
+      "fillStyle": "solid",
+      "strokeColor": "#5f3dc4",
+      "strokeWidth": 3,
+      "boundElements": [
+        {
+          "id": "se3_title",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "se3_title",
+      "x": 760,
+      "y": 115,
+      "width": 300,
+      "height": 30,
+      "text": "SE 3.0: AI-Native / Agentic",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "se3_box",
+      "originalText": "SE 3.0",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "se3_desc",
+      "x": 770,
+      "y": 155,
+      "width": 280,
+      "height": 110,
+      "text": "• Intent-centric\n• Conversation-oriented\n• AI Teammates\n• Symbiotic collaboration\n• Devin, OpenAI Codex",
+      "fontSize": 13,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "originalText": "SE 3.0 desc",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "arrow_evolve",
+      "x": 350,
+      "y": 190,
+      "width": 400,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          400,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 3,
+      "strokeColor": "#1971c2"
+    },
+    {
+      "type": "text",
+      "id": "arrow_label",
+      "x": 480,
+      "y": 165,
+      "width": 140,
+      "height": 20,
+      "text": "Paradigm Shift",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "originalText": "shift",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "stack_title",
+      "x": 450,
+      "y": 310,
+      "width": 300,
+      "height": 30,
+      "text": "SE 3.0 Technology Stack",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "stack title",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "teammate",
+      "x": 100,
+      "y": 360,
+      "width": 180,
+      "height": 80,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#1971c2",
+      "boundElements": [
+        {
+          "id": "teammate_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "teammate_text",
+      "x": 110,
+      "y": 375,
+      "width": 160,
+      "height": 50,
+      "text": "Teammate.next\nAdaptive AI Partner",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "teammate",
+      "originalText": "teammate",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "ide",
+      "x": 320,
+      "y": 360,
+      "width": 180,
+      "height": 80,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeColor": "#2f9e44",
+      "boundElements": [
+        {
+          "id": "ide_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "ide_text",
+      "x": 330,
+      "y": 375,
+      "width": 160,
+      "height": 50,
+      "text": "IDE.next\nIntent-Centric Dev",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "ide",
+      "originalText": "ide",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "compiler",
+      "x": 540,
+      "y": 360,
+      "width": 180,
+      "height": 80,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#ffec99",
+      "fillStyle": "solid",
+      "strokeColor": "#f08c00",
+      "boundElements": [
+        {
+          "id": "compiler_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "compiler_text",
+      "x": 550,
+      "y": 375,
+      "width": 160,
+      "height": 50,
+      "text": "Compiler.next\nMulti-Objective Synthesis",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "compiler",
+      "originalText": "compiler",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "runtime",
+      "x": 760,
+      "y": 360,
+      "width": 180,
+      "height": 80,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#e03131",
+      "boundElements": [
+        {
+          "id": "runtime_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "runtime_text",
+      "x": 770,
+      "y": 375,
+      "width": 160,
+      "height": 50,
+      "text": "Runtime.next\nSLA-Aware Execution",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "runtime",
+      "originalText": "runtime",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "sase_title",
+      "x": 400,
+      "y": 480,
+      "width": 400,
+      "height": 30,
+      "text": "SASE: Structured Agentic Software Engineering",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "sase",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "duality",
+      "x": 200,
+      "y": 520,
+      "width": 300,
+      "height": 25,
+      "text": "SE Duality: SE for Humans ↔ SE for Agents",
+      "fontSize": 16,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "originalText": "duality",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "ace",
+      "x": 100,
+      "y": 560,
+      "width": 280,
+      "height": 100,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#e7f5ff",
+      "fillStyle": "solid",
+      "strokeColor": "#1971c2",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "ace_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "ace_title",
+      "x": 110,
+      "y": 570,
+      "width": 260,
+      "height": 25,
+      "text": "ACE: Agent Command Environment",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "ace",
+      "originalText": "ace title",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "ace_desc",
+      "x": 120,
+      "y": 600,
+      "width": 240,
+      "height": 50,
+      "text": "Human orchestrates, mentors,\nand oversees agent teams",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1971c2",
+      "originalText": "ace desc",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "aee",
+      "x": 700,
+      "y": 560,
+      "width": 280,
+      "height": 100,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#fff9db",
+      "fillStyle": "solid",
+      "strokeColor": "#f08c00",
+      "strokeWidth": 2,
+      "boundElements": [
+        {
+          "id": "aee_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "aee_title",
+      "x": 710,
+      "y": 570,
+      "width": 260,
+      "height": 25,
+      "text": "AEE: Agent Execution Environment",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "aee",
+      "originalText": "aee title",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "aee_desc",
+      "x": 720,
+      "y": 600,
+      "width": 240,
+      "height": 50,
+      "text": "Agents execute tasks with\nproactive human callbacks",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#f08c00",
+      "originalText": "aee desc",
+      "autoResize": true
+    },
+    {
+      "type": "arrow",
+      "id": "bidir1",
+      "x": 380,
+      "y": 590,
+      "width": 100,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          100,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#5f3dc4"
+    },
+    {
+      "type": "arrow",
+      "id": "bidir2",
+      "x": 600,
+      "y": 590,
+      "width": 100,
+      "height": 0,
+      "points": [
+        [
+          100,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeWidth": 2,
+      "strokeColor": "#5f3dc4"
+    },
+    {
+      "type": "text",
+      "id": "bidir_label",
+      "x": 490,
+      "y": 570,
+      "width": 100,
+      "height": 20,
+      "text": "Bi-directional",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "originalText": "bidir",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "artifacts_title",
+      "x": 450,
+      "y": 690,
+      "width": 300,
+      "height": 30,
+      "text": "Agentic Artifacts",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "artifacts",
+      "autoResize": true
+    },
+    {
+      "type": "ellipse",
+      "id": "mission",
+      "x": 150,
+      "y": 740,
+      "width": 140,
+      "height": 70,
+      "backgroundColor": "#d3f9d8",
+      "fillStyle": "solid",
+      "strokeColor": "#2f9e44",
+      "boundElements": [
+        {
+          "id": "mission_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "mission_text",
+      "x": 160,
+      "y": 755,
+      "width": 120,
+      "height": 40,
+      "text": "Mission Brief\n(Intent)",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "mission",
+      "originalText": "mission",
+      "autoResize": true
+    },
+    {
+      "type": "ellipse",
+      "id": "mrp",
+      "x": 350,
+      "y": 740,
+      "width": 140,
+      "height": 70,
+      "backgroundColor": "#a5d8ff",
+      "fillStyle": "solid",
+      "strokeColor": "#1971c2",
+      "boundElements": [
+        {
+          "id": "mrp_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "mrp_text",
+      "x": 360,
+      "y": 750,
+      "width": 120,
+      "height": 50,
+      "text": "MRP\n(Merge-Readiness\nPack)",
+      "fontSize": 10,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "mrp",
+      "originalText": "mrp",
+      "autoResize": true
+    },
+    {
+      "type": "ellipse",
+      "id": "crp",
+      "x": 550,
+      "y": 740,
+      "width": 140,
+      "height": 70,
+      "backgroundColor": "#ffec99",
+      "fillStyle": "solid",
+      "strokeColor": "#f08c00",
+      "boundElements": [
+        {
+          "id": "crp_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "crp_text",
+      "x": 560,
+      "y": 750,
+      "width": 120,
+      "height": 50,
+      "text": "CRP\n(Consultation\nRequest Pack)",
+      "fontSize": 10,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "crp",
+      "originalText": "crp",
+      "autoResize": true
+    },
+    {
+      "type": "ellipse",
+      "id": "resolution",
+      "x": 750,
+      "y": 740,
+      "width": 140,
+      "height": 70,
+      "backgroundColor": "#ffc9c9",
+      "fillStyle": "solid",
+      "strokeColor": "#e03131",
+      "boundElements": [
+        {
+          "id": "resolution_text",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "resolution_text",
+      "x": 760,
+      "y": 755,
+      "width": 120,
+      "height": 40,
+      "text": "Resolution\nRecord",
+      "fontSize": 11,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "resolution",
+      "originalText": "resolution",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "aidev_title",
+      "x": 420,
+      "y": 840,
+      "width": 360,
+      "height": 30,
+      "text": "AIDev Dataset Key Findings",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "aidev",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "finding1",
+      "x": 100,
+      "y": 890,
+      "width": 280,
+      "height": 60,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#ffe3e3",
+      "fillStyle": "solid",
+      "strokeColor": "#e03131"
+    },
+    {
+      "type": "text",
+      "id": "finding1_text",
+      "x": 110,
+      "y": 900,
+      "width": 260,
+      "height": 40,
+      "text": "456K+ Agentic PRs analyzed\n61K repositories, 47K developers",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "finding1",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "finding2",
+      "x": 420,
+      "y": 890,
+      "width": 280,
+      "height": 60,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#fff9db",
+      "fillStyle": "solid",
+      "strokeColor": "#f08c00"
+    },
+    {
+      "type": "text",
+      "id": "finding2_text",
+      "x": 430,
+      "y": 900,
+      "width": 260,
+      "height": 40,
+      "text": "Agents faster than humans\nbut PRs accepted less frequently",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "finding2",
+      "autoResize": true
+    },
+    {
+      "type": "rectangle",
+      "id": "finding3",
+      "x": 740,
+      "y": 890,
+      "width": 280,
+      "height": 60,
+      "roundness": {
+        "type": 3
+      },
+      "backgroundColor": "#d3f9d8",
+      "fillStyle": "solid",
+      "strokeColor": "#2f9e44"
+    },
+    {
+      "type": "text",
+      "id": "finding3_text",
+      "x": 750,
+      "y": 900,
+      "width": 260,
+      "height": 40,
+      "text": "Agent code structurally simpler\nGap: benchmark vs real-world trust",
+      "fontSize": 12,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "finding3",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "agents_title",
+      "x": 150,
+      "y": 970,
+      "width": 200,
+      "height": 25,
+      "text": "5 Leading Autonomous Agents:",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#1e1e1e",
+      "originalText": "agents",
+      "autoResize": true
+    },
+    {
+      "type": "text",
+      "id": "agents_list",
+      "x": 380,
+      "y": 970,
+      "width": 500,
+      "height": 25,
+      "text": "OpenAI Codex | Devin | GitHub Copilot | Cursor | Claude Code",
+      "fontSize": 14,
+      "fontFamily": 1,
+      "strokeColor": "#5f3dc4",
+      "originalText": "agents list",
+      "autoResize": true
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#ffffff"
+  }
+}
