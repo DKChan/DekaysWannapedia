@@ -64,7 +64,35 @@ ADR: 架构决策记录
 
 没什么好说的, 单纯看这个图挺好看的
 
-![descript](DK百科不全书-架构思想-软件工程-media/image1.png){width="5.538888888888889in" height="2.423692038495188in"}
+```mermaid
+flowchart LR
+    subgraph Client["客户端"]
+        C[Client]
+    end
+    
+    subgraph Gateway["网关层"]
+        GW[API Gateway]
+    end
+    
+    subgraph ServiceMesh["服务网格"]
+        direction TB
+        S1[Service A]
+        S2[Service B]
+        S3[Service C]
+    end
+    
+    subgraph DataLayer["数据层"]
+        D1[(Database)]
+        D2[(Cache)]
+    end
+    
+    C -->|HTTP/gRPC| GW
+    GW -->|路由| S1
+    S1 <-->|同步调用| S2
+    S2 <-->|同步调用| S3
+    S1 -->|读写| D1
+    S2 -->|缓存| D2
+```
 
 ### 设计流程
 
@@ -93,7 +121,43 @@ ADR: 架构决策记录
 
 ### 缓存结构分层
 
-![descript](DK百科不全书-架构思想-软件工程-media/image2.png){width="5.772222222222222in" height="7.932150043744532in"}
+```mermaid
+flowchart TB
+    subgraph ClientLayer["客户端层"]
+        Browser[浏览器缓存]
+        App[App本地缓存]
+    end
+    
+    subgraph CDNLayer["CDN层"]
+        CDN[CDN边缘缓存]
+    end
+    
+    subgraph GatewayLayer["网关层"]
+        GW[网关缓存]
+    end
+    
+    subgraph ServiceLayer["服务层"]
+        Local[本地缓存<br/>Caffeine/Guava]
+        Dist[分布式缓存<br/>Redis/Cluster]
+    end
+    
+    subgraph DataLayer["数据层"]
+        DB[(数据库)]
+    end
+    
+    Browser --> CDN
+    App --> CDN
+    CDN --> GW
+    GW --> Local
+    Local --> Dist
+    Dist --> DB
+    
+    Note1[静态资源<br/>更新频率低] -.-> Browser
+    Note2[边缘加速<br/>就近访问] -.-> CDN
+    Note3[动态内容<br/>API缓存] -.-> GW
+    Note4[热点数据<br/>内存级访问] -.-> Local
+    Note5[共享数据<br/>集群同步] -.-> Dist
+```
 
 高并发/高性能的优化-请求优化
 
@@ -177,7 +241,7 @@ internal是服务内逻辑的主要代码
 
 #### SOLID原则
 
-1.  **SRP simple responsiblity principle单一职责原则**
+1.  **SRP simple responsibility principle单一职责原则**
 
 并不是每个模块只做一件事, 而是某个模块只有一个原因被修改, 意思是他对某一种实体/动作的抽象负责;如果是某一个实体那么可能涉及关联多种事情;
 
@@ -342,19 +406,13 @@ open to add, close to modify, 通过增加代码来新增功能, 而不是修改
 
 ### 核心维度对比表
 
-  ---------- ------------------------------ -------------------------------------
-  **维度**   **扁平模块化 (Go Way)**        **分层结构 (DDD / Clean)**
-
-  设计核心   围绕 功能(Feature) 组织        围绕 领域(Domain) 组织
-
-  首要目标   简洁、开发速度、运行效率       可扩展性、可测试性、解耦
-
-  维护成本   初期极低，后期随模块膨胀增加   初期较高（模板代码多），后期平稳
-
-  循环依赖   目录结构简单，较易处理         需谨慎设计，否则易触发 Import Cycle
-
-  推荐语     务实派：拒绝过度工程           严谨派：追求架构解耦与长期演进
-  ---------- ------------------------------ -------------------------------------
+| **维度**   | **扁平模块化 (Go Way)**        | **分层结构 (DDD / Clean)**            |
+|:-----------|:-------------------------------|:--------------------------------------|
+| 设计核心   | 围绕 功能(Feature) 组织        | 围绕 领域(Domain) 组织                |
+| 首要目标   | 简洁、开发速度、运行效率       | 可扩展性、可测试性、解耦              |
+| 维护成本   | 初期极低，后期随模块膨胀增加   | 初期较高（模板代码多），后期平稳      |
+| 循环依赖   | 目录结构简单，较易处理         | 需谨慎设计，否则易触发 Import Cycle   |
+| 推荐语     | 务实派：拒绝过度工程           | 严谨派：追求架构解耦与长期演进        |
 
 ### 系统级
 
@@ -426,7 +484,28 @@ open to add, close to modify, 通过增加代码来新增功能, 而不是修改
 
 **从耦合的强度上**
 
-![descript](DK百科不全书-架构思想-软件工程-media/image3.png){width="5.772222222222222in" height="1.5498206474190726in"}
+```mermaid
+flowchart LR
+    subgraph CouplingStrength["耦合强度谱"]
+        direction LR
+        
+        Domain[领域耦合<br/>Domain Coupling]
+        PassThrough[传递耦合<br/>Pass-Through Coupling]
+        Common[公共耦合<br/>Common Coupling]
+        Content[内容耦合<br/>Content Coupling]
+    end
+    
+    Low[低耦合<br/>松耦合] --> Domain
+    Domain --> PassThrough
+    PassThrough --> Common
+    Common --> Content
+    Content --> High[高耦合<br/>紧耦合]
+    
+    style Domain fill:#90EE90
+    style PassThrough fill:#FFD700
+    style Common fill:#FFA500
+    style Content fill:#FF6347
+```
 
 1.  领域耦合
 
@@ -488,13 +567,60 @@ open to add, close to modify, 通过增加代码来新增功能, 而不是修改
 
 **架构量子可以类比DDD中的限界上下文**
 
-![descript](DK百科不全书-架构思想-软件工程-media/image4.png){width="5.772222222222222in" height="3.8689009186351706in"}
+```mermaid
+flowchart TB
+    subgraph ArchQuantum1["架构量子1 - 高耦合"]
+        direction TB
+        S1[Service A]
+        S2[Service B]
+        S3[Service C]
+        Lib[共享库<br/>Shared Library]
+        
+        S1 -->|import| Lib
+        S2 -->|import| Lib
+        S3 -->|import| Lib
+    end
+    
+    Note1[共享静态依赖<br/>无法独立部署] -.-> ArchQuantum1
+```
 
-![descript](DK百科不全书-架构思想-软件工程-media/image5.png){width="5.772222222222222in" height="2.4160608048993875in"}
+```mermaid
+flowchart TB
+    subgraph ArchQuantum2["架构量子2 - 解耦后"]
+        direction TB
+        S1[Service A]
+        S2[Service B]
+        S3[Service C]
+        
+        S1 -.->|异步通信| MQ[消息队列]
+        S2 -.->|异步通信| MQ
+        S3 -.->|异步通信| MQ
+    end
+    
+    Note2[异步通信<br/>独立架构量子] -.-> ArchQuantum2
+```
 
 这钟共享依赖的决定上游模块不能独立部署, 所以这种静态依赖决定了这个整体是一个架构量子
 
-![descript](DK百科不全书-架构思想-软件工程-media/image6.png){width="5.772222222222222in" height="3.2625601487314086in"}
+```mermaid
+flowchart TB
+    subgraph AQ1["架构量子1"]
+        direction TB
+        S1[Service A]
+        S2[Service B]
+    end
+    
+    subgraph AQ2["架构量子2"]
+        direction TB
+        S3[Service C]
+        S4[Service D]
+    end
+    
+    S2 -.->|异步通信| S3
+    
+    Note1[虚线 = 异步通信<br/>无同步调用依赖<br/>独立部署单元] -.-> S2
+    Note2[虚线 = 异步通信<br/>无同步调用依赖<br/>独立部署单元] -.-> S3
+```
 
 虚线是异步通信, 没有了同步调用依赖的话, 就认为是解耦了的.所以上图认为是两个个独立的架构量子
 
@@ -508,7 +634,30 @@ open to add, close to modify, 通过增加代码来新增功能, 而不是修改
 2.  一致性: 从原子到顺序到因果到最终
 3.  协调: 是需要统一编排还是各自协调
 
-![descript](DK百科不全书-架构思想-软件工程-media/image7.png){width="3.7305555555555556in" height="2.0807939632545933in"}
+```mermaid
+flowchart TB
+    subgraph Dimensions["动态耦合三维度"]
+        direction TB
+        
+        subgraph Comm["通信方式"]
+            Sync[同步通信]
+            Async[异步通信]
+        end
+        
+        subgraph Cons["一致性"]
+            Atomic[原子一致性]
+            Causal[因果一致性]
+            Eventual[最终一致性]
+        end
+        
+        subgraph Coord["协调方式"]
+            Orchestration[集中编排]
+            Choreography[分散协作]
+        end
+    end
+    
+    Note[三个维度的组合<br/>决定了8种架构模式] -.-> Dimensions
+```
 | 模式名称 | 通信 | 一致性 | 协调方式 | 耦合程度 |
 |:---|:---:|:---:|:---:|:---:|
 | 传统叙事(sao) | 同步 | 原子 | 集中编排 | 非常高 |
@@ -526,7 +675,37 @@ open to add, close to modify, 通过增加代码来新增功能, 而不是修改
 
 #### 简述
 
-![descript](DK百科不全书-架构思想-软件工程-media/image9.png){width="4.666666666666667in" height="3.875in"}
+```mermaid
+flowchart TB
+    subgraph Modularity["模块化属性"]
+        direction TB
+        
+        Avail[可用性<br/>Availability]
+        Scal[可伸缩性<br/>Scalability]
+        Agil[敏捷性<br/>Agility]
+    end
+    
+    subgraph AgilityComponents["敏捷性组成"]
+        direction TB
+        Deploy[可部署性<br/>Deployability]
+        Test[可测试性<br/>Testability]
+        Maint[可维护性<br/>Maintainability]
+    end
+    
+    subgraph MaintainExt["可维护与扩展"]
+        direction LR
+        Maint2[可维护性<br/>Maintainability]
+        Ext[可扩展性<br/>Extensibility]
+    end
+    
+    Agil --> AgilityComponents
+    Maint --> Maint2
+    
+    Note1[容错性<br/>服务弹性] -.-> Avail
+    Note2[水平扩容<br/>垂直扩容] -.-> Scal
+    Note3[CI/CD支持] -.-> Deploy
+    Note4[自动化测试] -.-> Test
+```
 
 **可用性**: 容错性, 可以参考**服务弹性**
 
@@ -601,7 +780,35 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 文中说随着服务细分的提升, 弹性更像单个部署单元的纵向承载, 可伸缩性更像部署单元的水平扩展; 但是在实践中, 面对可预见的日常波峰和活动的激增, 也是可以通过提前水平扩容进行防御
 
-![descript](DK百科不全书-架构思想-软件工程-media/image11.png){width="3.345138888888889in" height="2.7094181977252845in"}
+```mermaid
+flowchart TB
+    subgraph Scalability["可伸缩性 vs 弹性"]
+        direction TB
+        
+        Scal[可伸缩性<br/>Scalability]
+        Elas[弹性<br/>Elasticity]
+    end
+    
+    subgraph ScalChar["可伸缩性特征"]
+        direction TB
+        S1[水平扩展<br/>Horizontal Scaling]
+        S2[部署单元扩展]
+        S3[长期增长应对]
+    end
+    
+    subgraph ElasChar["弹性特征"]
+        direction TB
+        E1[纵向扩容<br/>Vertical Scaling]
+        E2[单个部署单元承载]
+        E3[流量激增应对<br/>波峰处理]
+    end
+    
+    Scal --> ScalChar
+    Elas --> ElasChar
+    
+    Note1[业务逐渐增长<br/>用户规模上涨] -.-> Scal
+    Note2[流量激增<br/>每日波峰] -.-> Elas
+```
 
 #### 可用性 / 容错性
 
@@ -617,7 +824,28 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 1)  基于组件分解 2) 战术分叉
 
-![descript](DK百科不全书-架构思想-软件工程-media/image12.png){width="3.178472222222222in" height="2.7788626421697287in"}
+```mermaid
+flowchart TB
+    subgraph Decomposition["模块分解策略"]
+        direction TB
+        
+        Start[单体应用]
+        
+        subgraph Methods["分解方法"]
+            Component[基于组件分解]
+            Tactical[战术分叉]
+        end
+        
+        End[模块化服务]
+    end
+    
+    Start --> Methods
+    Component --> End
+    Tactical --> End
+    
+    Note1[按目录/功能拆分] -.-> Component
+    Note2[从功能点出发<br/>保留依赖] -.-> Tactical
+```
 
 **根据抽象性和不稳定性计算**
 
@@ -629,9 +857,47 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 主序列距离 D = \|A+l-1\|
 
-![descript](DK百科不全书-架构思想-软件工程-media/image13.png){width="4.09375in" height="3.46875in"}
+```mermaid
+flowchart TB
+    subgraph AbstractnessStability["抽象性-不稳定性坐标"]
+        direction TB
+        
+        subgraph Zone["四个区域"]
+            direction TB
+            
+            Z1[痛苦区<br/>Pain Zone<br/>修改多+被引用多]
+            Z2[基础区<br/>Foundation<br/>修改少+被引用多]
+            Z3[业务区<br/>Business<br/>修改多+被引用少]
+            Z4[无用区<br/>Useless<br/>修改少+被引用少]
+        end
+    end
+    
+    Note1[高不稳定性<br/>易变] -.-> Z1
+    Note2[低不稳定性<br/>稳定] -.-> Z2
+    Note3[高抽象性] -.-> Z2
+    Note4[低抽象性] -.-> Z3
+```
 
-![descript](DK百科不全书-架构思想-软件工程-media/image14.png){width="4.239583333333333in" height="3.8020833333333335in"}
+```mermaid
+flowchart LR
+    subgraph MainSequence["主序列距离"]
+        direction TB
+        
+        subgraph Axes["坐标轴"]
+            direction LR
+            
+            Y[不稳定性 I<br/>Instability]
+            X[抽象性 A<br/>Abstractness]
+            
+            Ideal[理想线<br/>D=0]
+            Above[上方<br/>过于抽象]
+            Below[下方<br/>过于具体]
+        end
+    end
+    
+    Note1[距离理想线越近<br/>设计越好] -.-> Ideal
+    Note2[主序列距离 D=\|A+I-1\|] -.-> Axes
+```
 
 卧槽, 这和我之前看到的一个坐标轴很像, 也是四个区域的划分;
 
@@ -689,7 +955,37 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 将重构后可以单独部署的圈定好
 
-![descript](DK百科不全书-架构思想-软件工程-media/image15.png){width="5.772222222222222in" height="5.366029090113736in"}
+```mermaid
+flowchart TB
+    subgraph ComponentDecomposition["基于组件分解流程"]
+        direction TB
+        
+        Step1["1. 识别和调整组件模式"]
+        Step2["2. 收集公共领域组件模式"]
+        Step3["3. 扁平化组件模式"]
+        Step4["4. 明确组件依赖项模式"]
+        Step5["5. 构建组件领域模式"]
+        Step6["6. 构建领域服务模式"]
+    end
+    
+    subgraph Details["各步骤详情"]
+        direction TB
+        D1["按目录分割<br/>整合扁平代码"]
+        D2["相似功能抽象整合"]
+        D3["处理孤儿类<br/>重新整合"]
+        D4["分析传入传出依赖<br/>减少组件"]
+        D5["领域设计<br/>寻找限界上下文"]
+        D6["圈定独立部署单元"]
+    end
+    
+    Step1 --> Step2 --> Step3 --> Step4 --> Step5 --> Step6
+    Step1 -.-> D1
+    Step2 -.-> D2
+    Step3 -.-> D3
+    Step4 -.-> D4
+    Step5 -.-> D5
+    Step6 -.-> D6
+```
 
 #### 战术分叉
 
@@ -734,7 +1030,26 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 数据域? 五步法? 这是啥?
 
-![descript](DK百科不全书-架构思想-软件工程-media/image16.png){width="5.772222222222222in" height="1.5481321084864392in"}
+```mermaid
+flowchart LR
+    subgraph DataDomainSteps["数据域五步法"]
+        direction LR
+        
+        Step1["1. 识别数据域"]
+        Step2["2. 分配数据所有权"]
+        Step3["3. 迁移到数据域"]
+        Step4["4. 切换数据访问"]
+        Step5["5. 删除旧数据"]
+    end
+    
+    Step1 --> Step2 --> Step3 --> Step4 --> Step5
+    
+    Note1[分析数据边界] -.-> Step1
+    Note2[确定服务所有权] -.-> Step2
+    Note3[数据迁移] -.-> Step3
+    Note4[服务切换] -.-> Step4
+    Note5[清理旧数据] -.-> Step5
+```
 
 ### 服务粒度
 
@@ -756,7 +1071,34 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 是否做了太多不相干的事情; 保持内聚和整体大小的平衡
 
-![descript](DK百科不全书-架构思想-软件工程-media/image17.png){width="3.907638888888889in" height="4.764040901137358in"}
+```mermaid
+flowchart TB
+    subgraph DecompositionFactors["粒度分解因素"]
+        direction TB
+        
+        Scope["服务范畴及功能<br/>Scope & Function"]
+        Volatility["代码易变性<br/>Volatility"]
+        Scalability["可伸缩性和吞吐量<br/>Scalability & Throughput"]
+        Fault["容错性<br/>Fault Tolerance"]
+        Security["安全性<br/>Security"]
+        Extensibility["可扩展性<br/>Extensibility"]
+    end
+    
+    subgraph ScopeDetail["服务范畴详情"]
+        direction TB
+        Cohesion["高内聚"]
+        Size["整体大小平衡"]
+        SinglePurpose["单一目的"]
+    end
+    
+    Scope --> ScopeDetail
+    
+    Note1[识别频繁变更部分<br/>基础vs业务分层] -.-> Volatility
+    Note2[大流量业务拆分<br/>业务隔离] -.-> Scalability
+    Note3[重要业务隔离<br/>SLA/SLI/SLO] -.-> Fault
+    Note4[敏感数据隔离<br/>隐私保护] -.-> Security
+    Note5[快速变更业务<br/>易于添加功能] -.-> Extensibility
+```
 
 2.  代码易变性
 
@@ -857,13 +1199,90 @@ ML(0%-100%)是可维护水平, ci是组件的耦合水平
 
 不是, 这么高级吗
 
-![descript](DK百科不全书-架构思想-软件工程-media/image21.png){width="5.001388888888889in" height="3.998839676290464in"}
+```mermaid
+flowchart TB
+    subgraph SidecarPattern["Sidecar模式"]
+        direction TB
+        
+        App[应用服务<br/>Application]
+        Sidecar[Sidecar代理<br/>Envoy/Linkerd]
+        
+        App <-->|本地通信<br/>localhost| Sidecar
+    end
+    
+    subgraph ServiceMesh["Service Mesh架构"]
+        direction TB
+        
+        S1[服务A]
+        S2[服务B]
+        S3[服务C]
+        
+        SC1[Sidecar A]
+        SC2[Sidecar B]
+        SC3[Sidecar C]
+        
+        Control[控制平面<br/>Control Plane]
+    end
+    
+    S1 <-->|流量| SC1
+    S2 <-->|流量| SC2
+    S3 <-->|流量| SC3
+    
+    SC1 <-->|服务间通信| SC2
+    SC2 <-->|服务间通信| SC3
+    
+    Control -->|配置下发| SC1
+    Control -->|配置下发| SC2
+    Control -->|配置下发| SC3
+    
+    Note1[Sidecar与业务服务<br/>部署在同一Pod] -.-> SidecarPattern
+    Note2[数据平面+控制平面<br/>统一流量管理] -.-> ServiceMesh
+```
 
 有点帅
 
-![descript](DK百科不全书-架构思想-软件工程-media/image22.png){width="4.386805555555555in" height="2.785825678040245in"}
+```mermaid
+flowchart TB
+    subgraph SidecarDetail["Sidecar详细架构"]
+        direction TB
+        
+        subgraph Pod["Pod"]
+            App[应用容器<br/>Business Logic]
+            Sidecar[Sidecar容器<br/>Proxy]
+        end
+        
+        External[外部服务<br/>Other Services]
+    end
+    
+    App <-->|Inbound/Outbound| Sidecar
+    Sidecar <-->|Network| External
+    
+    Note1[服务发现] -.-> Sidecar
+    Note2[负载均衡] -.-> Sidecar
+    Note3[熔断限流] -.-> Sidecar
+    Note4[安全认证] -.-> Sidecar
+```
 
-![descript](DK百科不全书-架构思想-软件工程-media/image23.png){width="5.772222222222222in" height="1.0069925634295713in"}
+```mermaid
+flowchart LR
+    subgraph Comparison["Sidecar vs Service Mesh"]
+        direction LR
+        
+        Sidecar[Sidecar模式<br/>单服务代理]
+        Mesh[Service Mesh<br/>服务网格]
+    end
+    
+    SidecarPros["优点:<br/>- 简单轻量<br/>- 无侵入<br/>- 独立升级"]
+    SidecarCons["缺点:<br/>- 资源占用<br/>- 运维复杂<br/>- 学习成本"]
+    
+    MeshPros["优点:<br/>- 统一管控<br/>- 可视化<br/>- 策略集中"]
+    MeshCons["缺点:<br/>- 架构复杂<br/>- 性能损耗<br/>- 平台依赖"]
+    
+    Sidecar --> SidecarPros
+    Sidecar --> SidecarCons
+    Mesh --> MeshPros
+    Mesh --> MeshCons
+```
 
 难啊, 需要部署平台的支持, 相对其他方法还是有一定的学习成本, 增加了运维成本
 
@@ -909,7 +1328,23 @@ ACID 和 BASE; 不赘述了
 
 利用rpc或其他调用方式, 获取目标数据
 
-![descript](DK百科不全书-架构思想-软件工程-media/image24.png){width="5.772222222222222in" height="1.3288134295713037in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端服务
+    participant ServiceA as 服务A
+    participant ServiceB as 服务B
+    participant ServiceC as 服务C
+    participant DB as 数据库
+    
+    Client->>ServiceA: 1. 发起请求
+    ServiceA->>ServiceB: 2. RPC调用获取数据
+    ServiceB->>DB: 3. 查询数据
+    DB-->>ServiceB: 4. 返回数据
+    ServiceB-->>ServiceA: 5. 返回结果
+    ServiceA->>ServiceC: 6. RPC调用获取数据
+    ServiceC-->>ServiceA: 7. 返回结果
+    ServiceA-->>Client: 8. 聚合响应
+```
 
 ####  列schema复制模式
 
@@ -931,7 +1366,43 @@ ACID 和 BASE; 不赘述了
 
 这个感觉更多是为了性能问题而提出的解决方案
 
-![descript](DK百科不全书-架构思想-软件工程-media/image26.png){width="5.772222222222222in" height="1.8714621609798776in"}
+```mermaid
+flowchart TB
+    subgraph CachePattern["复制缓存模式"]
+        direction TB
+        
+        subgraph ServiceA["服务A"]
+            Cache1[本地缓存<br/>Local Cache]
+            App1[应用服务]
+        end
+        
+        subgraph ServiceB["服务B"]
+            Cache2[本地缓存<br/>Local Cache]
+            App2[应用服务]
+        end
+        
+        subgraph ServiceC["服务C"]
+            Cache3[本地缓存<br/>Local Cache]
+            App3[应用服务]
+        end
+        
+        DistCache[分布式缓存<br/>Redis Cluster]
+        DB[(数据库)]
+    end
+    
+    App1 <-->|读写| Cache1
+    App2 <-->|读写| Cache2
+    App3 <-->|读写| Cache3
+    
+    Cache1 <-->|同步| DistCache
+    Cache2 <-->|同步| DistCache
+    Cache3 <-->|同步| DistCache
+    
+    DistCache <-->|回源| DB
+    
+    Note1[本地缓存<br/>减少网络开销] -.-> Cache1
+    Note2[分布式缓存<br/>集群同步] -.-> DistCache
+```
 
 #### 数据领域模式
 
@@ -939,35 +1410,194 @@ ACID 和 BASE; 不赘述了
 
 不同服务间共享使用数据
 
-![descript](DK百科不全书-架构思想-软件工程-media/image27.png){width="5.772222222222222in" height="1.6944706911636045in"}
+```mermaid
+flowchart TB
+    subgraph DataDomain["数据领域模式"]
+        direction TB
+        
+        subgraph DomainService["领域数据服务"]
+            DS[数据领域服务]
+            Data[(领域数据)]
+        end
+        
+        subgraph ServiceA["服务A"]
+            A[应用服务A]
+        end
+        
+        subgraph ServiceB["服务B"]
+            B[应用服务B]
+        end
+        
+        subgraph ServiceC["服务C"]
+            C[应用服务C]
+        end
+    end
+    
+    A <-->|数据访问| DS
+    B <-->|数据访问| DS
+    C <-->|数据访问| DS
+    DS <-->|数据管理| Data
+    
+    Note1[领域数据聚合<br/>统一数据管理] -.-> DS
+    Note2[共享数据访问<br/>避免直接耦合] -.-> DomainService
+```
 
 ### 分布式工作流
 
 #### 集中编排式通信
 
-![descript](DK百科不全书-架构思想-软件工程-media/image28.png){width="5.772222222222222in" height="3.4133814523184602in"}
+```mermaid
+flowchart TB
+    subgraph Orchestration["集中编排式通信"]
+        direction TB
+        
+        Orchestrator[编排器<br/>Orchestrator]
+        
+        S1[服务A]
+        S2[服务B]
+        S3[服务C]
+        S4[服务D]
+    end
+    
+    Client[客户端] -->|发起请求| Orchestrator
+    Orchestrator -->|调用| S1
+    Orchestrator -->|调用| S2
+    Orchestrator -->|调用| S3
+    Orchestrator -->|调用| S4
+    
+    S1 -->|返回结果| Orchestrator
+    S2 -->|返回结果| Orchestrator
+    S3 -->|返回结果| Orchestrator
+    S4 -->|返回结果| Orchestrator
+    
+    Orchestrator -->|聚合响应| Client
+    
+    Note1[统一协调<br/>集中控制] -.-> Orchestrator
+    Note2[同步调用<br/>强一致性] -.-> Orchestration
+```
 
-![descript](DK百科不全书-架构思想-软件工程-media/image29.png){width="5.772222222222222in" height="2.155644138232721in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant Orchestrator as 编排器
+    participant S1 as 服务A
+    participant S2 as 服务B
+    participant S3 as 服务C
+    
+    Client->>Orchestrator: 1. 发起业务流程
+    Orchestrator->>S1: 2. 调用服务A
+    S1-->>Orchestrator: 3. 返回结果
+    Orchestrator->>S2: 4. 调用服务B
+    S2-->>Orchestrator: 5. 返回结果
+    Orchestrator->>S3: 6. 调用服务C
+    S3-->>Orchestrator: 7. 返回结果
+    Orchestrator-->>Client: 8. 流程完成
+```
 
 #### 分散协作式通信
 
-![descript](DK百科不全书-架构思想-软件工程-media/image30.png){width="5.772222222222222in" height="2.8906846019247596in"}
+```mermaid
+flowchart TB
+    subgraph Choreography["分散协作式通信"]
+        direction TB
+        
+        S1[服务A]
+        S2[服务B]
+        S3[服务C]
+        S4[服务D]
+        
+        MQ[消息队列<br/>Event Bus]
+    end
+    
+    Client[客户端] -->|发起请求| S1
+    S1 -->|发布事件| MQ
+    MQ -->|订阅事件| S2
+    MQ -->|订阅事件| S3
+    S2 -->|发布事件| MQ
+    MQ -->|订阅事件| S4
+    
+    S4 -->|完成通知| Client
+    
+    Note1[事件驱动<br/>松耦合] -.-> Choreography
+    Note2[无中心编排器<br/>各自协调] -.-> Choreography
+```
 
-![descript](DK百科不全书-架构思想-软件工程-media/image31.png){width="5.772222222222222in" height="1.9744739720034996in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant S1 as 服务A
+    participant MQ as 消息队列
+    participant S2 as 服务B
+    participant S3 as 服务C
+    
+    Client->>S1: 1. 发起业务流程
+    S1->>MQ: 2. 发布事件A
+    MQ->>S2: 3. 消费事件A
+    S2->>MQ: 4. 发布事件B
+    MQ->>S3: 5. 消费事件B
+    S3->>MQ: 6. 发布完成事件
+    MQ->>Client: 7. 流程完成通知
+```
 
-**分散协作的状态管理方式**
+|**分散协作的状态管理方式**
 
 首问责任人模式(状态维护在第一个服务, 下游的操作需要调用它更新状态)
 
-![descript](DK百科不全书-架构思想-软件工程-media/image32.png){width="5.772222222222222in" height="1.0582403762029746in"}
+```mermaid
+flowchart LR
+    subgraph FirstResponder["首问责任人模式"]
+        direction LR
+        
+        S1[服务A<br/>首问责任人<br/>状态维护者]
+        S2[服务B]
+        S3[服务C]
+        
+        State[(状态存储)]
+    end
+    
+    S1 <-->|读写状态| State
+    S2 -->|查询状态| S1
+    S3 -->|更新状态| S1
+    
+    Note1[状态集中管理<br/>下游通过首问者获取/更新] -.-> S1
+```
 
 无状态分散协作(完全不维护状态, 需要再去实时查询各个服务)
 
-![descript](DK百科不全书-架构思想-软件工程-media/image33.png){width="5.772222222222222in" height="0.8300339020122485in"}
+```mermaid
+flowchart LR
+    subgraph Stateless["无状态分散协作"]
+        direction LR
+        
+        S1[服务A]
+        S2[服务B]
+        S3[服务C]
+    end
+    
+    S1 -->|实时查询| S2
+    S1 -->|实时查询| S3
+    S2 -->|实时查询| S3
+    
+    Note1[无状态维护<br/>实时查询各服务] -.-> Stateless
+```
 
 邮戳耦合(在通信交互中保存工作流状态并更新流通)
 
-![descript](DK百科不全书-架构思想-软件工程-media/image34.png){width="5.772222222222222in" height="0.9720997375328084in"}
+```mermaid
+flowchart LR
+    subgraph Stamp["邮戳耦合模式"]
+        direction LR
+        
+        S1[服务A]
+        S2[服务B]
+        S3[服务C]
+    end
+    
+    S1 -->|消息+状态邮戳| S2
+    S2 -->|消息+状态邮戳| S3
+    
+    Note1[状态随消息传递<br/>邮戳更新流通] -.-> Stamp
+```
 
 ### 事务SAGA
 
@@ -1009,25 +1639,100 @@ ACID 和 BASE; 不赘述了
 
 为了模仿单体系统, 编排器编排工作流, 管理整体分布式事务(可能异构); 回滚一般会用补偿事务进行实现
 
-![descript](DK百科不全书-架构思想-软件工程-media/image36.png){width="5.772222222222222in" height="2.5463024934383203in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant Orchestrator as 编排器
+    participant S1 as 服务A
+    participant S2 as 服务B
+    participant S3 as 服务C
+    
+    Client->>Orchestrator: 1. 发起事务
+    Orchestrator->>S1: 2. 调用服务A
+    S1-->>Orchestrator: 3. 成功
+    Orchestrator->>S2: 4. 调用服务B
+    S2-->>Orchestrator: 5. 成功
+    Orchestrator->>S3: 6. 调用服务C
+    S3-->>Orchestrator: 7. 失败
+    Orchestrator->>S2: 8. 补偿回滚
+    Orchestrator->>S1: 9. 补偿回滚
+    Orchestrator-->>Client: 10. 事务失败
+    
+    Note over Orchestrator: 同步+原子+集中编排<br/>耦合度: 非常高
+```
 
 #### 电话标签
 
 没有独立的编排器, 所以每个服务需要承担一部分非自身业务的逻辑; 遇到错误情况的回滚恢复会更复杂
 
-![descript](DK百科不全书-架构思想-软件工程-media/image37.png){width="5.772222222222222in" height="2.578500656167979in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant S1 as 服务A
+    participant S2 as 服务B
+    participant S3 as 服务C
+    
+    Client->>S1: 1. 发起请求
+    S1->>S2: 2. 调用服务B
+    S2->>S3: 3. 调用服务C
+    S3-->>S2: 4. 失败
+    S2->>S2: 5. 本地回滚
+    S2-->>S1: 6. 失败通知
+    S1->>S1: 7. 本地回滚
+    S1-->>Client: 8. 失败
+    
+    Note over S1,S3: 同步+原子+分散协作<br/>耦合度: 高
+```
 
 #### 童话故事
 
 和传统叙事相近, 但因为不需要保证强一致性, 所以没有全局事务的控制, 只有各个服务的本地事务; 但我感觉其实相差不多, 因为实现形式是类似的, 而这个全局事务控制不明显; 我觉得即便你没有全局事务的限制, 但遇到错误时, 你还是要进行组织回滚;
 
-![descript](DK百科不全书-架构思想-软件工程-media/image38.png){width="5.772222222222222in" height="2.7351738845144355in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant Orchestrator as 编排器
+    participant S1 as 服务A
+    participant S2 as 服务B
+    participant S3 as 服务C
+    
+    Client->>Orchestrator: 1. 发起请求
+    Orchestrator->>S1: 2. 调用服务A
+    S1-->>Orchestrator: 3. 本地事务提交
+    Orchestrator->>S2: 4. 调用服务B
+    S2-->>Orchestrator: 5. 本地事务提交
+    Orchestrator->>S3: 6. 调用服务C
+    S3-->>Orchestrator: 7. 失败
+    Orchestrator->>S2: 8. 异步补偿
+    Orchestrator->>S1: 9. 异步补偿
+    Orchestrator-->>Client: 10. 最终一致
+    
+    Note over Orchestrator: 同步+最终一致+集中编排<br/>耦合度: 中
+```
 
 #### 时间旅行
 
 比较像服务级的责任链, 管道式处理; 这其实ec这两更适合异步; 对面复杂场景会很困难
 
-![descript](DK百科不全书-架构思想-软件工程-media/image39.png){width="5.772222222222222in" height="2.7051640419947507in"}
+```mermaid
+sequenceDiagram
+    participant Client as 客户端
+    participant S1 as 服务A
+    participant S2 as 服务B
+    participant S3 as 服务C
+    
+    Client->>S1: 1. 发起请求
+    S1->>S1: 2. 本地事务提交
+    S1->>S2: 3. 调用服务B
+    S2->>S2: 4. 本地事务提交
+    S2->>S3: 5. 调用服务C
+    S3->>S3: 6. 本地事务提交
+    S3-->>S2: 7. 成功
+    S2-->>S1: 8. 成功
+    S1-->>Client: 9. 完成
+    
+    Note over S1,S3: 同步+最终一致+分散协作<br/>耦合度: 低
+```
 
 #### 奇幻小说
 
@@ -1085,7 +1790,37 @@ ACID 和 BASE; 不赘述了
 
 就是协议, 约定方式等
 
-![descript](DK百科不全书-架构思想-软件工程-media/image44.png){width="5.772222222222222in" height="1.8412193788276465in"}
+```mermaid
+flowchart TB
+    subgraph ContractTypes["契约类型"]
+        direction TB
+        
+        Strict[严格契约<br/>Strict Contract]
+        Loose[宽松契约<br/>Loose Contract]
+    end
+    
+    subgraph StrictDetail["严格契约特征"]
+        direction TB
+        S1[RPC/gRPC]
+        S2[Protocol Buffers]
+        S3[强类型约束]
+        S4[版本化控制]
+    end
+    
+    subgraph LooseDetail["宽松契约特征"]
+        direction TB
+        L1[REST/HTTP]
+        L2[JSON]
+        L3[弱类型/动态]
+        L4[灵活演进]
+    end
+    
+    Strict --> StrictDetail
+    Loose --> LooseDetail
+    
+    Note1[高保真数据流<br/>构建时验证] -.-> Strict
+    Note2[高度解耦<br/>运行时适配] -.-> Loose
+```
 
 #### 严格契约
 
@@ -1123,4 +1858,39 @@ REST(http+json)
 1.  契约管理: 越自由越难管理
 2.  需要适应度函数: 需要有衡量指标
 
-![descript](DK百科不全书-架构思想-软件工程-media/image46.png){width="3.625in" height="1.71875in"}
+```mermaid
+flowchart LR
+    subgraph ContractComparison["严格契约 vs 宽松契约对比"]
+        direction LR
+        
+        subgraph StrictPros["严格契约优点"]
+            SP1[高保真数据流]
+            SP2[版本化]
+            SP3[构建时验证]
+            SP4[更好的文档]
+        end
+        
+        subgraph StrictCons["严格契约缺点"]
+            SC1[紧密耦合]
+            SC2[版本爆炸]
+        end
+        
+        subgraph LoosePros["宽松契约优点"]
+            LP1[高度解耦]
+            LP2[容易演进]
+        end
+        
+        subgraph LooseCons["宽松契约缺点"]
+            LC1[契约管理困难]
+            LC2[需要适应度函数]
+        end
+    end
+    
+    Strict[严格契约] --> StrictPros
+    Strict --> StrictCons
+    Loose[宽松契约] --> LoosePros
+    Loose --> LooseCons
+    
+    Note1[gRPC/Protobuf] -.-> Strict
+    Note2[REST/JSON] -.-> Loose
+```
