@@ -1,3 +1,5 @@
+# DK百科不全书-NewSQL
+
 NewSQL目前一般说的都是天然分布式的, 满足关系型的数据库
 
 比如: google spanner, TiDB, CockroachDB

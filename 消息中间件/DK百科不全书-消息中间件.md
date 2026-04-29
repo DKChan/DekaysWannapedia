@@ -1,6 +1,8 @@
+# DK百科不全书-消息中间件
+
 ## 一般问题
 
-##### 如何保证at least once
+### 如何保证at least once
 
 消息不丢失，但可能重复
 
@@ -8,13 +10,13 @@
 
 消费者: 同步模式, 保证处理成功后更新偏移量
 
-##### exactly once
+### exactly once
 
 不丢失, 不重复
 
 保证上面相同的同时, 利用唯一ID进行幂等处理
 
-##### mostly once
+#### mostly once
 
 ## RocketMQ
 
