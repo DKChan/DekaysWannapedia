@@ -24,17 +24,19 @@ Hamming 认为做研究前先问自己：**这个问题重要吗？**
 
 1. **Nobel Prize 问题** — 解决后能得诺贝尔奖的问题
 2. **Fundamental 问题** — 本质性的、基础的问题
-3. **大多数人不关心的问题** — 大家真正在乎的问题
+3. **被忽视的问题** — 暂时不被重视，但本质重要的问题
 
 > "一个好的工程师和一个伟大的工程师的区别在于，他们选择解决什么问题"
 
 ### 判断标准
 
 - **问题的影响范围有多大？** 影响越小，越不值得
-- **这个问题是别人关心的吗？** 自 High Performance Computing (HPC) 以来最大的敌人是没有人关心你解决的是什么问题
+- **这个问题是别人关心的吗？** 在 HPC 时代最大的敌人之一是，没有人关心你解决的是什么问题
 - **Timing 重要** — 很多问题不是没价值，而是太早了
 
-> "It's not the age that matters, it's the timing. Many significant contributions are made by people who are too early." — 这不是时势造英雄，而是时势造英雄
+> "It's not the age that matters, it's the timing. Many significant contributions are made by people who are too early."
+> 
+> **译**：重要的不是年龄，而是时机。很多重大贡献都是由那些"太超前"的人做出的。
 
 ---
 
@@ -148,11 +150,11 @@ Hamming 在 Bell Labs 观察到：
 
 # 第二部分：做科学和工程的方法
 
-## 07. 大oop 思想 (The Great Heap)
+## 07. The Great Heap (知识的边界)
 
 ### 问题
 
-- **The Great Heap** — 已知和未知之间巨大的"堆"
+- **The Great Heap** — 人类知识总量中，已知与未知之间的巨大边界
 - 大多数人只关心在堆的边缘工作
 - 少数人试图减小这个堆
 
@@ -334,7 +336,7 @@ Hamming 在 Bell Labs 观察到：
 
 ### Hamming 的观点
 
-> "有知识的人可以做他们被教导的事情，但有智慧的人知道什么时候不做什么"
+> "有知识者能做事，有智慧者知何时不做"
 
 ---
 
